@@ -4,7 +4,7 @@
 ShiftTable ShiftTableFactory() {
 
   int length = 65536;
-  ShiftTable table = malloc(sizeof(int) * length);
+  ShiftTable table = (ShiftTable)malloc(sizeof(int) * length);
   if (table == NULL) {
 	  return NULL;
   }

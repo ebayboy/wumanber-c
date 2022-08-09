@@ -4,7 +4,7 @@
 PrefixTable PrefixTableFactory() {
 
   int length = 65536;
-  PrefixTable prefixTable = malloc(sizeof(PatternNodeStruct) * length);
+  PrefixTable prefixTable =(PrefixTable) malloc(sizeof(PatternNodeStruct) * length);
   if (prefixTable == NULL) {
 	  return NULL;
   }

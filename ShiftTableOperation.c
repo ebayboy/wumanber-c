@@ -43,7 +43,7 @@ ShiftTableOperation ShiftTableOperationFactory()
 {
     if(!shiftTableOperation)
     {
-        shiftTableOperation = malloc(sizeof(ShiftTableOperationStruct));
+        shiftTableOperation = (ShiftTableOperation)malloc(sizeof(ShiftTableOperationStruct));
         if (shiftTableOperation == NULL)
         {
             return NULL;

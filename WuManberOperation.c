@@ -77,7 +77,7 @@ MatchingResult search(WuManber wuManber, char* content)
     ShiftTableOperation shiftTableOperation = ShiftTableOperationFactory();
     PrefixTableOperation prefixTableOperation = PrefixTableOperationFactory();
 
-    MatchingResult result = malloc(sizeof(MatchingResultStruct));
+    MatchingResult result = (MatchingResult)malloc(sizeof(MatchingResultStruct));
     if (result == NULL)
     {
         return NULL;
@@ -130,7 +130,7 @@ MatchingResult search(WuManber wuManber, char* content)
                 if(!flag)
                 {
 
-                    MatchingResult res = malloc(sizeof(MatchingResultStruct));
+                    MatchingResult res = (MatchingResult)malloc(sizeof(MatchingResultStruct));
                     if (res == NULL)
                     {
                         return NULL;
@@ -208,7 +208,7 @@ WuManberOperation WuManberOperationFactory()
 {
     if(!wuManberOperation)
     {
-        wuManberOperation = malloc(sizeof(WuManberOperationStruct));
+        wuManberOperation = (WuManberOperation)malloc(sizeof(WuManberOperationStruct));
         if (wuManberOperation == NULL)
         {
             return NULL;
