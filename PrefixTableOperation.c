@@ -12,6 +12,9 @@ void push(PrefixTable prefixTable, char subString[2], char* pattern)
 	}
 
     PatternNode node = malloc(sizeof(PatternNodeStruct));
+	if (node == NULL) {
+		return ;
+	}
     node->pattern = pattern;
     node->length = strlen(pattern);
     node->next = NULL;
@@ -48,6 +51,9 @@ PrefixTableOperation PrefixTableOperationFactory()
     if(!prefixTableOperation)
     {
         prefixTableOperation = malloc(sizeof(PrefixTableOperationStruct));
+		if (prefixTableOperation == NULL) {
+			return NULL;
+		}
         prefixTableOperation->push = push;
         prefixTableOperation->pop = pop;
     }

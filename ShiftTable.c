@@ -5,6 +5,9 @@ ShiftTable ShiftTableFactory() {
 
   int length = 65536;
   ShiftTable table = malloc(sizeof(int) * length);
+  if (table == NULL) {
+	  return NULL;
+  }
 
   for(int i=0;i<length;i++) {
     table[i] = -1;

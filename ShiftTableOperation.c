@@ -5,6 +5,10 @@ void put(ShiftTable shiftTable, char subString[2], int shift) {
 
   int key = subString[0] * 256 + subString[1];
 
+  if (subString[0] < 0 || subString[0] > 255) {
+	  return;
+  }
+
   // new subString
   if(shiftTable[key] == -1) {
     shiftTable[key] = shift;
@@ -20,6 +24,9 @@ void put(ShiftTable shiftTable, char subString[2], int shift) {
 
 int get(ShiftTable shiftTable, char subString[2]) {
   int key = subString[0] * 256 + subString[1];
+  if (subString[0] < 0 || subString[0] > 255) {
+	  return -1;
+  }
   return shiftTable[key];
 }
 
@@ -27,6 +34,9 @@ ShiftTableOperation ShiftTableOperationFactory() {
   static ShiftTableOperation shiftTableOperation = NULL;
   if(!shiftTableOperation) {
     shiftTableOperation = malloc(sizeof(ShiftTableOperationStruct));
+	if (shiftTableOperation == NULL) {
+		return NULL;
+	}
     shiftTableOperation->put = put;
     shiftTableOperation->get = get;
   }
