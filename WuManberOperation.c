@@ -8,10 +8,15 @@
 #include "PrefixTable.h"
 #include "PrefixTableOperation.h"
 
+static WuManberOperation wuManberOperation = NULL;
+
 void buildShiftTable(WuManber wuManber, char** patterns, int count)
 {
 
-    ShiftTableOperation tableOperation = ShiftTableOperationFactory();
+    ShiftTableOperation tableOperation = ShiftTableOperationFactory(); //指向static变量
+	if (tableOperation == NULL) {
+		return;
+	}
 
     int minLength = INT_MAX;
     for(int i=0; i<count; i++)
@@ -48,7 +53,11 @@ void buildShiftTable(WuManber wuManber, char** patterns, int count)
 void buildPrefixTable(WuManber wuManber, char** patterns, int count)
 {
 
-    PrefixTableOperation tableOperation = PrefixTableOperationFactory();
+    PrefixTableOperation tableOperation = PrefixTableOperationFactory(); //指向static变量
+	if (tableOperation == NULL) {
+		return;
+	}
+
     PrefixTable table = PrefixTableFactory();
 
     // block size = 2
@@ -126,11 +135,15 @@ MatchingResult search(WuManber wuManber, char* content)
                     {
                         return NULL;
                     }
+#if 0
                     res->pattern = malloc(node->length);
                     if (res->pattern)
                     {
                         res->pattern = node->pattern;
                     }
+#else
+					res->pattern = node->pattern;
+#endif
                     res->start = prefixStart + 1;
                     res->end = prefixStart + node->length - 1 + 1;
                     res->next = NULL;
@@ -155,9 +168,15 @@ MatchingResult search(WuManber wuManber, char* content)
 
 void destroy(WuManber wuManber)
 {
+	if (wuManber == NULL) {
+		return;
+	}
 
     // free shift table
-    free(wuManber->shiftTable);
+	if (wuManber->shiftTable) {
+		free(wuManber->shiftTable);
+		wuManber->shiftTable = NULL;
+	}
 
     // free prefix table
     for(int i=0; i<65536; i++)
@@ -170,20 +189,23 @@ void destroy(WuManber wuManber)
                 PatternNode temp = current;
                 current = current->next;
                 free(temp);
+				temp = NULL;
             }
         }
     }
-    free(wuManber->prefixTable);
+	if (wuManber->prefixTable) {
+		free(wuManber->prefixTable);
+	}
 
     // free wumanber
-    free(wuManber);
-
-
+	if (wuManber) { 
+		free(wuManber);
+		wuManber = NULL;
+	}
 }
 
 WuManberOperation WuManberOperationFactory()
 {
-    static WuManberOperation wuManberOperation = NULL;
     if(!wuManberOperation)
     {
         wuManberOperation = malloc(sizeof(WuManberOperationStruct));
@@ -198,3 +220,14 @@ WuManberOperation WuManberOperationFactory()
     }
     return wuManberOperation;
 }
+
+__attribute__((destructor))
+void WuManberOperationDestructor()
+{
+	if (wuManberOperation) {
+		free(wuManberOperation);
+		wuManberOperation = NULL;
+	}
+}
+
+

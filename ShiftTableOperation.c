@@ -1,44 +1,64 @@
 #include <stdlib.h>
 #include "ShiftTableOperation.h"
 
-void put(ShiftTable shiftTable, char subString[2], int shift) {
+static ShiftTableOperation shiftTableOperation = NULL;
 
-  int key = subString[0] * 256 + subString[1];
+void put(ShiftTable shiftTable, char subString[2], int shift)
+{
 
-  if (subString[0] < 0 || subString[0] > 255) {
-	  return;
-  }
+    int key = subString[0] * 256 + subString[1];
 
-  // new subString
-  if(shiftTable[key] == -1) {
-    shiftTable[key] = shift;
-  }
-  // already have the same subString
-  // select min
-  else {
-    if(shiftTable[key] > shift) {
-      shiftTable[key] = shift;
+    if (subString[0] < 0 || subString[0] > 255)
+    {
+        return;
     }
-  }
+
+    // new subString
+    if(shiftTable[key] == -1)
+    {
+        shiftTable[key] = shift;
+    }
+    // already have the same subString
+    // select min
+    else
+    {
+        if(shiftTable[key] > shift)
+        {
+            shiftTable[key] = shift;
+        }
+    }
 }
 
-int get(ShiftTable shiftTable, char subString[2]) {
-  int key = subString[0] * 256 + subString[1];
-  if (subString[0] < 0 || subString[0] > 255) {
-	  return -1;
-  }
-  return shiftTable[key];
+int get(ShiftTable shiftTable, char subString[2])
+{
+    int key = subString[0] * 256 + subString[1];
+    if (subString[0] < 0 || subString[0] > 255)
+    {
+        return -1;
+    }
+    return shiftTable[key];
 }
 
-ShiftTableOperation ShiftTableOperationFactory() {
-  static ShiftTableOperation shiftTableOperation = NULL;
-  if(!shiftTableOperation) {
-    shiftTableOperation = malloc(sizeof(ShiftTableOperationStruct));
-	if (shiftTableOperation == NULL) {
-		return NULL;
+ShiftTableOperation ShiftTableOperationFactory()
+{
+    if(!shiftTableOperation)
+    {
+        shiftTableOperation = malloc(sizeof(ShiftTableOperationStruct));
+        if (shiftTableOperation == NULL)
+        {
+            return NULL;
+        }
+        shiftTableOperation->put = put;
+        shiftTableOperation->get = get;
+    }
+    return shiftTableOperation;
+}
+
+__attribute__((destructor))
+void ShiftTableOperationDestructor()
+{
+	if (shiftTableOperation) {
+		free(shiftTableOperation);
+		shiftTableOperation = NULL;
 	}
-    shiftTableOperation->put = put;
-    shiftTableOperation->get = get;
-  }
-  return shiftTableOperation;
 }
