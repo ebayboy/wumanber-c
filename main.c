@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "WuManber.h"
 #include "WuManberOperation.h"
 #include "MatchingResult.h"
@@ -18,6 +19,7 @@ int main(int argc, const char* argv[])
         return 0;
     }
 
+	//1. init RawOperation
     RawOperation rawOperation = RawOperationFactory();
 
     printf("\n - Reading pattern file ...\n\n");
